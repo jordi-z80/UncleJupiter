@@ -1,0 +1,25 @@
+{
+	// ONLY When using quick commands, some leading texts can be removed in order to improve quick command success.
+	"ignorableLeadingTexts" :
+	[
+		"Per favor",
+		"Si us plau",
+		"Vull que",
+		"Vull",
+		",",
+		".",
+	],
+	
+	// ONLY when using quick commands, if any of these words are found inside the user order, the quick command will be cancelled.
+	// This is to avoid things like "Open Excel and watch a StarTalk podcast" translates into a single "Open" command because of RegExs.
+	// Note: some quick-commands can still use these words if they're included in their 'allowed words' list.
+	"quickCommandDiscardWords" :
+	[
+		"i",
+		"després",
+		"llavors",
+		"primer",
+		"segon",
+	],
+	
+}

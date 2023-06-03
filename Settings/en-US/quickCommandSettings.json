@@ -1,0 +1,24 @@
+{
+	// ONLY When using quick commands, some leading texts can be removed in order to improve quick command success.
+	"ignorableLeadingTexts" :
+	[
+		"Please",
+		"I want you to",
+		"I want to",
+		",",
+		".",
+	],
+	
+	// ONLY when using quick commands, if any of these words are found inside the user order, the quick command will be cancelled.
+	// This is to avoid things like "Open Excel and watch a StarTalk podcast" translates into a single "Open" command because of RegExs.
+	// Note: some quick-commands can still use these words if they're included in the "allowed words" of the command.
+	"quickCommandDiscardWords" :
+	[
+		"and",
+		"then",
+		"finally",
+		"after",
+		"next",
+	],
+	
+}

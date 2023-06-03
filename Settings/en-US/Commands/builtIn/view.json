@@ -1,0 +1,32 @@
+[
+	{
+		// the name of the action. Must be unique.
+		"name": "view",
+
+		// search command works better without quick commands, because of the "specify if possible" bit in the embedding.
+		"flags":
+		[
+			"disableQuickCommand"
+		],
+
+		// The regexps to match with quick run
+		"regExp":
+		[
+			"See (?<mainParam>.*)",
+			"View (?<mainParam>.*)"
+		],
+
+		"invalidWords":
+		[
+			"video",
+			"movie"
+		],
+
+		// action and param translation of the regEx if it matches.
+		"action": "%IMAGESEARCH%",
+		"param": "%mainParam%",
+
+		// descriptive text for the LLM
+		"llmText": "If the user wants to search an image, use action = '%IMAGESEARCH%' and param = '<what the user wants to search, specify if possible>'."
+	}
+]

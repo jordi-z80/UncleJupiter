@@ -1,0 +1,22 @@
+[
+	{
+		// the name of the action. Must be unique.
+		"name":"listen",
+		
+		// search command works better without quick commands, because of the "specify if possible" bit in the embedding.
+		"flags": ["disableQuickCommand"],
+		
+		// The regexps to match with quick run
+		"regExp": 
+		[
+			"Listen (?<mainParam>.*)",
+		],
+		
+		// action and param translation of the regEx if it matches.
+		"action": "%LISTEN%",
+		"param": "%mainParam%",
+		
+		// descriptive text for the LLM
+		"llmText":"If the user wants to listen or search music, use action = '%LISTEN%' and param = '<what the user wants to listen, specify if possible>'."		
+	}
+]

@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>disable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<Compile Remove="external\**" />
+		<Content Remove="external\**" />
+		<None Remove="external\**" />
+		<EmbeddedResource Remove="external\**" />
+	</ItemGroup>
+
+	
+	<ItemGroup>
+    <None Remove="Content\computerbeep_29.mp3" />
+    <None Remove="Content\computerbeep_41.mp3" />
+    <None Remove="Content\computerbeep_58.mp3" />
+    <None Remove="Settings\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Settings\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Betalgo.OpenAI" Version="6.8.6" />
+    <PackageReference Include="Google.Cloud.Speech.V1" Version="3.4.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+    <PackageReference Include="NAudio" Version="2.1.0" />
+    <PackageReference Include="Vosk" Version="0.3.38" />
+  </ItemGroup>
+
+</Project>

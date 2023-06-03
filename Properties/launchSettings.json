@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "UncleJupiter": {
+      "commandName": "Project",
+      "workingDirectory": "./"
+    }
+  }
+}

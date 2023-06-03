@@ -1,0 +1,30 @@
+[
+	{
+		// the name of the action. Must be unique.
+		"name":"watch",
+		
+		// search command works better without quick commands, because of the "specify if possible" bit in the embedding.
+		"flags": ["disableQuickCommand"],
+		
+		// The regexps to match with quick run
+		"regExp": 
+		[
+			"Watch (?<mainParam>.*)",
+			"Search a video (of )(?<mainParam>.*)",
+			"See a video (of )(?<mainParam>.*)",
+			"Play a video (of )(?<mainParam>.*)",
+		],
+		
+		"invalidWords":
+		[
+			"photo","image","song","music",
+		],
+		
+		// action and param translation of the regEx if it matches.
+		"action": "%VIDEO%",
+		"param": "%mainParam%",
+		
+		// descriptive text for the LLM
+		"llmText":"If the user wants to search or watch a video, use action = '%VIDEO%' and param = '<what the user wants to watch, specify if possible>'."		
+	}
+]

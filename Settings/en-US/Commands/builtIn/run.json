@@ -1,0 +1,22 @@
+[
+	{
+		// the name of the action. Must be unique.
+		"name":"run",
+		
+		// The regexps to match with quick run
+		"regExp": 
+		[
+			"Run (?<mainParam>.*)",
+			"Execute (?<mainParam>.*)",
+			"Start (?<mainParam>.*)",
+		],
+		
+	
+		// action and param translation of the regEx if it matches.
+		"action": "run",
+		"param": "%mainParam%",
+		
+		// descriptive text for the LLM
+		"llmText":"If the user wants to start or run a program in the computer, use action = 'run' and param = '<what the user wants to run, specify if possible>'."
+	}
+]

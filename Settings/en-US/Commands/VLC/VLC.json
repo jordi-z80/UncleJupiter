@@ -1,0 +1,91 @@
+[
+	{
+		// the name of the action. Must be unique.
+		"name":"vlc_pause",
+		
+		// The regexps to match with quick run
+		"regExp": 
+		[
+			"Pause (the )?video",
+			"Pause (the )?movie",
+		],
+		
+		// only when WinAmp is running
+		"isProcessRunning": "vlc",
+		
+		// action and param translation of the regEx if it matches.
+		"action": "%FSCMD%",
+		"param": "vlcPause",
+		
+		// descriptive text for the LLM
+		"llmText":"If the user wants to pause the video, use action = '%FSCMD%' and param = 'vlcPause'."
+	},
+	{
+		// the name of the action. Must be unique.
+		"name":"vlc_play",
+		
+		// The regexps to match with quick run
+		"regExp": 
+		[
+			"Play (the )?video",
+			"Play (the )?movie",
+			"Continue (the )?video",
+			"Continue (the )?movie",
+		],
+		
+		// only when WinAmp is running
+		"isProcessRunning": "vlc",
+		
+		// action and param translation of the regEx if it matches.
+		"action": "%FSCMD%",
+		"param": "vlcPlay",
+		
+		// descriptive text for the LLM
+		"llmText":"If the user wants to start the video again, use action = '%FSCMD%' and param = 'vlcPlay'."
+		
+	},
+	{
+		// the name of the action. Must be unique.
+		"name":"vlc_next",
+		
+		// The regexps to match with quick run
+		"regExp": 
+		[
+			"Next video",
+			"Next movie",
+		],
+		
+		// only when WinAmp is running
+		"isProcessRunning": "vlc",
+		
+		// action and param translation of the regEx if it matches.
+		"action": "%FSCMD%",
+		"param": "vlcNext",
+		
+		// descriptive text for the LLM
+		"llmText":"If the user wants to move to the next video, use action = '%FSCMD%' and param = 'vlcNext'."
+		
+	},
+		{
+		// the name of the action. Must be unique.
+		"name":"vlc_prev",
+		
+		// The regexps to match with quick run
+		"regExp": 
+		[
+			"Previous video",
+			"Previous movie",
+		],
+		
+		// only when WinAmp is running
+		"isProcessRunning": "vlc",
+		
+		// action and param translation of the regEx if it matches.
+		"action": "%FSCMD%",
+		"param": "vlcPrevious",
+		
+		// descriptive text for the LLM
+		"llmText":"If the user wants to move to the previous video, use action = '%FSCMD%' and param = 'vlcPrevious'."
+		
+	},
+]

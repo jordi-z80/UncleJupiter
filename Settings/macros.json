@@ -1,0 +1,20 @@
+{
+	// Every command has an action associated. 
+	// This file is used to avoid hardcoding paths to actions, and be able to easily change preferred browsers.
+	// In example, %VLC% in a command will expand to the VLC path stablished here.
+	"VLC": "\"C:\\Program Files\\VideoLAN\\VLC\\vlc.exe\"",
+	
+	// Yes, I still use WinAmp
+	"WINAMP": "\"C:\\Program Files (x86)\\Winamp\\winamp.exe\"",
+
+	// This is a commandline tool to help with some built in commands like volume, VLC control, alarms and power control.
+	// It is not mandatory and can be replaced, however you'll have to change the commands too.    
+	// https://github.com/jordi-z80/FSCmd
+	"FSCMD": "c:\\bats\\fscmd.bat",
+	
+	"WEBSEARCH": "http://www.google.co.uk/search?q=",
+	"IMAGESEARCH": "https://www.bing.com/images/search?q=",
+	"LISTEN": "https://www.youtube.com/results?search_query=",
+	"VIDEO": "https://www.youtube.com/results?search_query=",
+
+}
