@@ -19,9 +19,11 @@ class CommandInfo
 
 	public string llmText { get; set; }						// descriptive text for the LLM
 
+	// Flags
 	public List<string> flags { get; set; }                 // list of optional flags for the command
-	public bool isQuickCommandDisabled => flags.Contains (g.DisableQuickCommand);
-	public bool requiresDate => flags.Contains (g.RequiresDate);
+	public bool isQuickCommandDisabled => flags.Contains (g.FlagDisableQuickCommand);
+	public bool requiresDate => flags.Contains (g.FlagRequiresDate);
+	public bool injectAlways => flags.Contains (g.FlagInjectAlways);
 
 
 	// -- Runtime variables (not in the JSON file)

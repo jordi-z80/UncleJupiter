@@ -1,0 +1,31 @@
+[
+	
+	{
+		// the name of the action. Must be unique.
+		"name":"alarm",
+		
+		// Note: this action requires the current date to work correctly.
+		"flags": ["requiresDate"],
+		
+		// The regexps to match with quick run
+		"regExp": 
+		[
+			// <timeDeltaParam> would need to accept multilingual time formats, not implemented yet.
+			// just let the LLM do its job.
+			
+			//"Posa una alarma per d'aquí a (an )?alarm (in |to |for )?(?<timeDeltaParam>.*)( from now)?"
+		],
+		
+		// action and param translation of the regEx if it matches.
+		//"action": "%FSCMD%",
+		//"param": "setAlarm --deltaTime=%timeDeltaParam%",
+		
+	
+		// descriptive text for the LLM
+		"llmText":"If the user wants to set an alarm for a certain date, use action = '%FSCMD%' and param = 'setAlarm --date=\"[YYYY/]MM/dd HH:mm\" --text=\"<reason for the alarm>\"' Otherwise, if he wants to set the alarm with a relative time, use action = '%FSCMD%' and param = 'setAlarm --deltaTime=\"HH:mm:ss\" --text=\"<reason for the alarm>\"'"
+		
+
+		
+	},
+
+]

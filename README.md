@@ -1,14 +1,16 @@
-﻿# Uncle, I want to see planet Jupiter.
+﻿
+
+# Uncle, I want to see planet Jupiter. 
 
 My 4-years old niece loves to see planets on the computer. I thought it'd be fun to make a computer assistant just to see her face when the computer did what she said.
 At the end I added a few more bells and whistles to help me with my daily tasks and easily add new commands. 
 
 I know there are many PC assistants out there, but most of them won't work well (or not at all) on our maiden language.
 
-Still, it's quite fun to play with and flexible. It should be easy to make a mobile companion to issue orders from your phone, use it for domotics, ...
+Still, it's quite fun to play with and very flexible.
 
 
-# How it works
+# A GPT-powered computer assistant.
 
 This is a very naive computer assistant. At a glace, it works as follows:
 
@@ -16,19 +18,24 @@ This is a very naive computer assistant. At a glace, it works as follows:
 * A sound cue is played. THEN you can issue your order.
 * The speech is recognized (single utterance).
 * It uses RegEx to try to understand the order. If the order is short and can be understood, it tries to run the order directly.
-* If not, a query is created and sent to OpenAI-GPT.
+* If not, a prompt is created and sent to OpenAI-GPT.
 * With the GPT answer, tries to run the order again.
 
 As it is now, it could be configured to use any language with Vosk and Google Speech support, as long as you configure it correctly and rewrite the commands for the new language.
 
+
 # Warning 
 
-The assistant doesn't check for any kind of security. The main query instructs the LLM to refuse running any command that can harm the computer,
+This program as is uses **paid services**. It's important to keep a close eye on your OpenAI API and Google Speech expenses.
+
+
+The assistant **doesn't check** for any kind of **security**. The main prompt instructs the LLM to refuse running any command that can harm the computer,
 but as you probably know there are many ways to harm a computer that the LLM may not be able to detect (or just ignore). 
 
 Be careful with the commands you add.
 
 It is also advisable to run the assistant in a virtual machine, at least until you're confident with the code and commands running.
+
 
 # Requirements
 
@@ -82,7 +89,7 @@ The Settings folder contains the following files:
 
 For each language, there's a folder that contains the language specific configuration:
 * **appSettings-LANGUAGE.json** : Contains the configuration for the language. Each speech recognizer has its own configuration, as well as a list of 'names' for the computer.
-* **query.txt** : Contains the query to be sent to the language model. The results are quite good with the current one, but feel free to experiment.
+* **prompt.txt** : Contains the prompt to be sent to the language model. The results are quite good with the current one, but feel free to experiment.
 * **quickCommandSettings.json**: Configuration to improve the accuracy of the RegEx based commands (quick-commands).
 
 # Commands
@@ -106,7 +113,7 @@ The file must contain a JSON array of objects, where each object is a command. T
 
 * **name** : The name of the command. Must be unique (used as index in the embeddings dictionary).
 * **flags** : An array of flags. 
-  * **requiresDate** : The command requires the current date to work correctly (it is injected into the LLM query).
+  * **requiresDate** : The command requires the current date to work correctly (it is injected into the LLM prompt).
   * **disableQuickCommand** : The command cannot be run as a quick-command, even if it matches and has the data to do so.
 * **llmText** : Text sent to the LLM if the embedding is selected when compared against the user input.
 * **isProcessRunning** : In order for this command to be run, the specified process must be running. (e.g. if you want to run a command only if VLC is running, you can specify it here)
@@ -201,13 +208,13 @@ Once you have the JSON file, place it anywhere in your HDD and adjust the secret
 In order to add another language just clone the folder of an existing one and change the configuration and command files. 
 The name of the folder doesn't need to be the same as the language code.
 
-There's one important point though: The **llmText** of every command is injected into the query.txt if needed. I've found that the LLM works way better
-in my maiden language if I have the query in English and I ask it to translate the user input to English. However, this may not
+There's one important point though: The **llmText** of every command is injected into the prompt.txt if needed. I've found that the LLM works way better
+in my maiden language if I have the prompt in English and I ask it to translate the user input to English. However, this may not
 be the case for other languages.
 
-The point is that if your query.txt is in English, then your **llmText** fields must be in English too (this makes it easier to create a new language).
+The point is that if your prompt.txt is in English, then your **llmText** fields must be in English too (this makes it easier to create a new language).
 
-If you want to translate the query.txt to your maiden language, then you must translate the **llmText** fields too of each command you want to use.
+If you want to translate the prompt.txt to your maiden language, then you must translate the **llmText** fields too of each command you want to use.
 
 # FSCmd
 I didn't want this project to have unneeded dependencies, so I created a external helper tool to reduce them, named FSCmd.
@@ -231,6 +238,8 @@ Once you hear the "beep", you can issue your order.
 Note: Saying to "play a song" doesn't really play a song right now. It maps the order into a youtube search.
 I haven't found a way to directly play a song in youtube, so if you have one, you can easily change the Commands/builtIn/watch.json file to play it directly.
 
+* When was the Sinclair Spectrum released?
+Note: Questions are converted into searches (change prompt.txt to change this behavior)
 
 Some commands (search, listen, watch) use "specify if possible" in their embedding. This means that if the LLM is intelligent enough
 (GPT-3.5 seems to do very rarely, but I suspect GPT-4 is much better at this job, based from my tests in ChatGPT-4)
@@ -248,3 +257,23 @@ the results are worse than issuing one order at a time, specially if orders are 
 
 * Search image of puppies and play a Tears for Fears song.
 * Run Excel and Word and the calculator.
+
+# Potential improvements
+
+Other than improving the command actions (like automatizing the audio and video search autoplay), and some implementation details (the run function is so lame) 
+the following improvements could be made:
+
+* Open a port to allow remote voice input. (safety measures must be taken)
+* Using keywords other than "computer" to route the order to a specific program. (e.g. "VLC: next" instead of "Computer: next video"). 
+* Voice control of standard windows menus navigating the application's menu (e.g. Visual Studio: (menu) Git, (menu)Commit) or through keybindings.
+* Dictation.
+* Using Semantic Kernel to allow easy swap for other LLMs.
+* No need to wait between the computer keyword and the order.
+
+# Potential uses
+
+* Voice assistant for languages not supported by the big players.
+* Domotics
+* Controlling the computer with your voice from a distance (through a mobile companion).
+* Adding voice commands to games (e.g. creating a mod to RimWorld and respond to things like "select granite wall")
+

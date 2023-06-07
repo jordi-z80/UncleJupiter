@@ -43,6 +43,7 @@ internal class EmbeddingDB
 	{
 		bool embeddingsModified = false;
 
+		// calculate the embeddings for all commands that need it (this could be done in parallel)
 		foreach (var cmd in commands)
 		{
 			bool requiresRecalculation = false;
@@ -63,7 +64,7 @@ internal class EmbeddingDB
 			}
 		}
 
-		// save embeddingDict to json (i'll move this to XML sooner or later)
+		// save embeddingDict for next time
 		if (embeddingsModified)
 		{
 			saveDB ();

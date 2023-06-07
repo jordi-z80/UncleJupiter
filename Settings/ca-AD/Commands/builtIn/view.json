@@ -9,14 +9,14 @@
 		// The regexps to match with quick run
 		"regExp":
 		[
-			"See (?<mainParam>.*)",
-			"View (?<mainParam>.*)"
+			"Veure (imatges de )?(?<mainParam>.*)",
+			"Visualitza (imatges de )?(?<mainParam>.*)"
 		],
 
 		"invalidWords":
 		[
-			"video",
-			"movie"
+			"vídeo",
+			"pel·lícula"
 		],
 
 		// action and param translation of the regEx if it matches.

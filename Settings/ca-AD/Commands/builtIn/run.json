@@ -10,11 +10,11 @@
 		// The regexps to match with quick run
 		"regExp": 
 		[
-			"Run (?<mainParam>.*)",
-			"Execute (?<mainParam>.*)",
-			"Start (?<mainParam>.*)",
-			"Launch (?<mainParam>.*)",
-			"Open (?<mainParam>.*)",
+			"Engega (el |la )?(?<mainParam>.*)",
+			"Executa (el |la )?(?<mainParam>.*)",
+			"Arranca (el |la )?(?<mainParam>.*)",
+			"Arrenca (el |la )?(?<mainParam>.*)",
+			"Obre (el |la )?(?<mainParam>.*)",
 		],
 		
 	

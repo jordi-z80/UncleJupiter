@@ -1,0 +1,117 @@
+[
+	{
+		// the name of the action. Must be unique.
+		"name":"winamp_next_song",
+		
+		// The regexps to match with quick run
+		"regExp": 
+		[
+			"(Fica la )?propera cançó",
+		],
+	
+		// only when WinAmp is running
+		"isProcessRunning": "winamp",
+		
+		// action and param translation of the regEx if it matches.
+		"action": "%WINAMP%",
+		"param": "/NEXT",
+		
+		// descriptive text for the LLM
+		"llmText":"If the user wants to play the next song (and he's not searching nor specifying a song), use action = '%WINAMP%' and param = '/NEXT'."
+	}
+	,
+	{
+		// the name of the action. Must be unique.
+		"name":"winamp_prev_song",
+		
+		// The regexps to match with quick run
+		"regExp": 
+		[
+			"(Fica l')?anterior cançó",
+			"Cançó anterior",
+		],
+		
+		// only when WinAmp is running
+		"isProcessRunning": "winamp",
+		
+		// action and param translation of the regEx if it matches.
+		"action": "%WINAMP%",
+		"param": "/PREV",
+		
+		// descriptive text for the LLM
+		"llmText":"If the user wants to play the previous song (and he's not searching nor specifying a song), use action = '%WINAMP%' and param = '/PREV'."
+	}
+	,
+	{
+		// the name of the action. Must be unique.
+		"name":"winamp_stop_song",
+		
+		// The regexps to match with quick run
+		"regExp": 
+		[
+			"Para (la )?música",
+			"Para (la )?cançó",
+		],
+		
+		// only when WinAmp is running
+		"isProcessRunning": "winamp",
+		
+		// action and param translation of the regEx if it matches.
+		"action": "%WINAMP%",
+		"param": "/STOP",
+		
+		// descriptive text for the LLM
+		"llmText":"If the user wants to stop the music, use action = '%WINAMP%' and param = '/STOP'."
+		
+	}
+	,
+	{
+		// the name of the action. Must be unique.
+		"name":"winamp_continue_song",
+		
+		// The regexps to match with quick run
+		"regExp": 
+		[
+			"Continua (la )cançó",
+			"Continua (la )música",
+		],
+		
+		
+	
+		
+		// only when WinAmp is running
+		"isProcessRunning": "winamp",
+		
+		// action and param translation of the regEx if it matches.
+		"action": "%WINAMP%",
+		"param": "/PLAY",
+		
+		// descriptive text for the LLM
+		"llmText":"If the user wants to resume the music (and he's not searching nor specifying a song), use action = '%WINAMP%' and param = '/PLAY'."
+		
+	}
+	,
+	{
+		// the name of the action. Must be unique.
+		"name":"winamp_pause_song",
+		
+		// The regexps to match with quick run
+		"regExp": 
+		[
+			"Pausa (la )?cançó",
+			"Pausa (la )?música",
+		],
+		
+		// only when WinAmp is running
+		"isProcessRunning": "winamp",
+		
+		// action and param translation of the regEx if it matches.
+		"action": "%WINAMP%",
+		"param": "%WINAMP% /PAUSE",
+		
+		// descriptive text for the LLM
+		"llmText":"If the user wants to pause the music, use action = '%WINAMP%' and param = '/PAUSE'."
+		
+	}	
+	
+]

@@ -46,8 +46,11 @@ public class LameProgramRunner : IProgramRunner
     /// <summary></summary>
     public void runProgramByShortName(string programName)
     {
+		// If we try to run 2 programs at the same time (e.g. run notepad and then run chrome), both will fail
+		// because we'll be outputting keys at the same time. Delay the second one until the first one is done.
 		if (!beingUsed)
 		{
+			// We have to run this on the main thread.
 			var main = Program.ServiceProvider.GetRequiredService<Main> ();
 			beingUsed = true;
 			main.addMainThreadAction (() => _runProgramByShortName (programName));

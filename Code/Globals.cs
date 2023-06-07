@@ -12,7 +12,8 @@ internal static class g
 {
     public static bool RecognitionStarted = false;
 
-	public const string DisableQuickCommand = "disableQuickCommand";
-	public const string RequiresDate = "requiresDate";
+	public const string FlagDisableQuickCommand = "disableQuickCommand";
+	public const string FlagRequiresDate = "requiresDate";
+	public const string FlagInjectAlways = "injectAlways";
 
 }

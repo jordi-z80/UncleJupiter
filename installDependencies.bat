@@ -23,7 +23,7 @@ set /p ans=Do you want to install vosk-english (Y/n)?
 if "%ans%" NEQ "n" (
     mkdir external
     curl -o ./external/vosk-model-small-en-us-0.15.zip https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip
-    7z.exe e ./external/vosk-model-small-en-us-0.15.zip -o./external/vosk-model-small-en-us-0.15/
+    7z.exe x ./external/vosk-model-small-en-us-0.15.zip -o./external/
     del .\external\vosk-model-small-en-us-0.15.zip
 ) else (
     echo Skipping vosk-english installation.

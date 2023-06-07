@@ -25,6 +25,10 @@ public class GoogleSpeechRecognition : ISpeechRecognitionModule
 
 	SemaphoreSlim _mutex = new SemaphoreSlim (1);
 
+	DateTime speechRecognitionStart;
+
+
+
 	//=============================================================================
 	/// <summary></summary>
 	public GoogleSpeechRecognition(IInputAudioModule _inputAudioModule,
@@ -33,6 +37,7 @@ public class GoogleSpeechRecognition : ISpeechRecognitionModule
         inputAudioModule = _inputAudioModule;
         outputAudioModule = _outputAudioModule;
 
+		// set the environment variable for the google credentials
 		Environment.SetEnvironmentVariable ("GOOGLE_APPLICATION_CREDENTIALS", Program.Settings.GOOGLE_APPLICATION_CREDENTIALS);
 
 		initialize ();
@@ -103,12 +108,22 @@ public class GoogleSpeechRecognition : ISpeechRecognitionModule
 			_mutex.Release();
 		}
 
+		// timeout check (avoid letting the recognition run forever due to a bug)
+		TimeSpan timeWorking = DateTime.Now - speechRecognitionStart;
+		if (timeWorking.TotalSeconds >= settings.MaxRecognitionTime)
+		{
+			Console.WriteLine ($"Google Speech timed out at {settings.MaxRecognitionTime} seconds.");
+			await stopRecognition ();
+		}
+
     }
 
-    //=============================================================================
-    /// <summary></summary>
-    void startRecognition()
+	
+	//=============================================================================
+	/// <summary></summary>
+	void startRecognition()
     {
+		speechRecognitionStart = DateTime.Now;
         streamingAudio = speechClient.StreamingRecognize();
 
 
@@ -124,19 +139,36 @@ public class GoogleSpeechRecognition : ISpeechRecognitionModule
 
     }
 
-	static int count = 0;
+	//=============================================================================
+	/// <summary></summary>
+	async Task stopRecognition ()
+	{
+		if (!g.RecognitionStarted) return;
 
-    //=============================================================================
-    /// <summary>This is called whenever google speech has results (definitive or provisional, if Interim is set to true)</summary>
-    async Task OnSpeechResponse()
+		await _mutex.WaitAsync ();
+		try
+		{
+			g.RecognitionStarted = false;
+			recognizing = false;
+			await streamingAudio.WriteCompleteAsync ();
+		}
+		finally
+		{
+			_mutex.Release ();
+		}
+
+
+	}
+
+	//=============================================================================
+	/// <summary>This is called whenever google speech has results (definitive or provisional, if Interim is set to true)</summary>
+	async Task OnSpeechResponse()
     {
         List<string> results = new List<string>();
 
         var responseStream = streamingAudio.GetResponseStream();
         while (await responseStream.MoveNextAsync())
         {
-			count++;
-
 			StreamingRecognizeResponse response = responseStream.Current;
             foreach (StreamingRecognitionResult result in response.Results)
             {
@@ -148,7 +180,7 @@ public class GoogleSpeechRecognition : ISpeechRecognitionModule
 					int level = isFinal ? 1 : 2;
 					if (settings.VerboseLevel >= level)
 					{
-						Console.WriteLine ($"{count} Google ({finalString}): {alternative.Transcript}");
+						Console.WriteLine ($"Google ({finalString}): {alternative.Transcript}");
 					}
 
 					if (isFinal) results.Add(alternative.Transcript);
@@ -159,24 +191,9 @@ public class GoogleSpeechRecognition : ISpeechRecognitionModule
             {
                 Debug.Assert(results.Count == 1);
 
-				await _mutex.WaitAsync();
-				try
-				{
-					g.RecognitionStarted = false;
-					recognizing = false;
-					await streamingAudio.WriteCompleteAsync ();
-				}
-				finally
-				{
-					_mutex.Release ();
-				}
-
-
+				await stopRecognition ();
                 outputAudioModule.playAudio("computerAccept");
-
-
                 SpeechRecognitionResult?.Invoke(this, new SpeechRecognitionResultEventArgs(results[0], true));
-
                 break;
             }
         }

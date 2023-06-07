@@ -4,11 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using OpenAI.GPT3;
-using OpenAI.GPT3.Managers;
-using OpenAI.GPT3.ObjectModels.RequestModels;
-using OpenAI.GPT3.ObjectModels;
 using Microsoft.Extensions.Configuration;
+using OpenAI;
+using OpenAI.Managers;
+using OpenAI.ObjectModels;
+using OpenAI.ObjectModels.RequestModels;
 
 namespace UncleJupiter;
 
@@ -47,17 +47,18 @@ internal class OpenAIModule : IAIModule
 		string languageName = Program.Settings.Language.Name;
 
 		// if lots of orders must be used, we could use embeddings here to expand the available commands
-		string query = File.ReadAllText ($"Settings/{languageCode}/query.txt");
-		string tquery = query
+		string prompt = File.ReadAllText ($"Settings/{languageCode}/prompt.txt");
+		string tPrompt = RemoveComments (prompt);
+		tPrompt = tPrompt
 						.Replace ("%LANGUAGE%", languageName)
 						.Replace ("%VOICE_ORDER%",userOrder)
 			;
 
-		if (llmExtraInstructions != null) tquery = tquery.Replace ("%LLM_INSTRUCTIONS%", llmExtraInstructions) ;
+		if (llmExtraInstructions != null) tPrompt = tPrompt.Replace ("%LLM_INSTRUCTIONS%", llmExtraInstructions) ;
 
-        var Messages = new List<ChatMessage> { ChatMessage.FromUser(tquery) };
+        var Messages = new List<ChatMessage> { ChatMessage.FromUser(tPrompt) };
 
-		Console.WriteLine ("OpenAI Query : " + tquery);
+		Console.WriteLine ("OpenAI Prompt : " + tPrompt);
 
 		var completionResult = await api.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest
         {
@@ -85,6 +86,18 @@ internal class OpenAIModule : IAIModule
         }
 
     }
+
+	//=============================================================================
+	/// <summary></summary>
+	private string RemoveComments (string prompt)
+	{
+		string[] split = prompt.Split ('\n');
+
+		string rv = "";
+		foreach (string line in split) if (!line.StartsWith ("//")) rv += line + "\n";
+
+		return rv;
+	}
 
 
 	//=============================================================================

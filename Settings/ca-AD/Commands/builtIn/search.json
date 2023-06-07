@@ -4,22 +4,20 @@
 		"name":"search",
 		
 		// search command works better without quick commands, because of the "specify if possible" bit in the embedding.
-		// inject always because questions will be converted into searches
 		"flags": ["disableQuickCommand","injectAlways"],
 		
 		// The regexps to match with quick run (it's not required because of allowQuickCommand=no ,still...)
 		"regExp": 
 		[
-			"Search for (?<mainParam>.*)",
-			"Search (?<mainParam>.*)",
+			"Busca (a internet)?(?<mainParam>.*)",
 		],
 		
 		"invalidWords":
 		[
-			"video",				// if you have to search a video, use watch
-			"movie",
-			"song",					// if you have to search a song, use listen
-			"music",
+			"vídeo",				// if you have to search a video, use watch
+			"pel·lícula",
+			"cançó",					// if you have to search a song, use listen
+			"música",
 		],
 		
 		// action and param translation of the regEx if it matches.

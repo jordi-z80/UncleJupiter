@@ -1,0 +1,40 @@
+[
+	
+	{
+		// the name of the action. Must be unique.
+		"name":"hibernate",
+		
+		// The regexps to match with quick run
+		"regExp": 
+		[
+			"Hiberna",
+		],
+		
+		// action and param translation of the regEx if it matches.
+		"action": "%FSCMD%",
+		"param": "hibernate",
+		
+		// descriptive text for the LLM
+		"llmText":"If the user wants to hibernate the computer, use action = '%FSCMD%' and param = 'hibernate'."
+	},
+	
+	{
+		// the name of the action. Must be unique.
+		"name": "sleep",
+		
+		// The regexps to match with quick run
+		"regExp": 
+		[
+			"dorm",
+			"dormir",
+		],
+		
+		// action and param translation of the regEx if it matches.
+		"action": "exec",
+		"param": "%FSCMD% sleep",
+		
+
+		// descriptive text for the LLM
+		"llmText":"If the user wants the computer to sleep, use action = '%FSCMD%' and param = 'sleep'."
+	}	
+]

@@ -46,6 +46,8 @@ internal partial class Main
 		commandManager = _commandManager;
 		this.embeddingDB = embeddingDB;
 
+		// the whole program is controlled by the output events of the speech recognition modules
+		// and the LLM output events.
 		voskRecognition.SpeechRecognitionResult += VoskRecognition_SpeechRecognitionResult;
 		googleSpeech.SpeechRecognitionResult += GoogleSpeech_SpeechRecognitionResult;
 
@@ -60,11 +62,6 @@ internal partial class Main
 	/// the "RecognitionStarted" flag so that we can send the data to Google for better recognition.</summary>
 	private void VoskRecognition_SpeechRecognitionResult (object sender, SpeechRecognitionResultEventArgs e)
 	{
-		if (e.Finished)
-		{
-			Debug.WriteLine ("Finished VOSK : " + e.Text);
-		}
-
 		if (!g.RecognitionStarted)
 		{
 			foreach (var computerName in Program.Settings.Recognition.ComputerName)
@@ -73,6 +70,9 @@ internal partial class Main
 				{
 					g.RecognitionStarted = true;
 					audioOut.playAudio ("computerCue");
+
+					// this avoids getting two "computer" orders (because we're using the computer word without needing to be 'final')
+					voskRecognition.reset ();
 					break;
 				}
 			}
@@ -84,9 +84,7 @@ internal partial class Main
 	/// </summary>
 	private void GoogleSpeech_SpeechRecognitionResult (object sender, SpeechRecognitionResultEventArgs e)
 	{
-		// quan es rep un resultat de google, passem a consultar amb el GPT
-		// aixo no aniria aqui !!
-
+		// pass the results of the google speech recognition to the main action function.
 		Task task = Task.Run (async () => await onValidSpeechReceived (e.Text));
 	}
 
@@ -95,7 +93,7 @@ internal partial class Main
 	/// <summary></summary>
 	async Task onValidSpeechReceived (string text)
 	{
-		// First, we check if the text can be automatically parsed via RegEx. This speeds up orders
+		// First, we check if the text can be automatically parsed via RegEx. This speeds up some orders
 		// and reduces GPT usage.
 		bool recognized = commandManager.processQuickCommand (text);
 		if (recognized) return;
@@ -109,13 +107,12 @@ internal partial class Main
 
 
 	//=============================================================================
-	/// <summary>This function calculates the order embedding vector, search the nearest embeddings
-	/// and returns a string with instructions to the LLM.</summary>
+	/// <summary>This function calculates the userOrder embedding vector, search the nearest embeddings
+	/// and returns a string with instructions for the LLM.</summary>
 	async Task<string> calculateCommandInfoInstructions (string userOrder)
 	{
 		// first we calculate the embeddings for the user order
 		var userOrderEmbedding = await aiModule.createEmbedding (userOrder);
-
 		if (userOrderEmbedding == null) return null;
 
 		// now, get a list of the nearest embeddings, sorted
@@ -123,42 +120,33 @@ internal partial class Main
 
 		bool requiresDate = false;
 
-		// For the moment I'll just add the first 10 embeddings to the query.
+		// For the moment I'll just add the first 10 embeddings to the prompt.
 		// Maybe later we can use a more sophisticated approach
 		string embeddingText = "";
 
 		int addedEmbeddings = 0;
-		const int MaxEmbeddingsToAdd = 10;
+		int MaxEmbeddingsToAdd = Program.Settings.Prompt.MaxEmbeddings;
 		runningProcesses.Clear ();
 
 		for (int i = 0; i < embeddingList.Count; i++)
 		{
+			if (addedEmbeddings >= MaxEmbeddingsToAdd) break;
+
 			// get the command for the embedding
 			string id = embeddingList[i].embeddingItem.EmbeddingId;
 			var commandInfo = commandManager.getCommandById (id);
 			if (commandInfo == null) continue;
 
-			// check if the command requires a program running
-			if (!String.IsNullOrWhiteSpace (commandInfo.isProcessRunning))
-			{
-				string processName = commandInfo.isProcessRunning;
+			// if the command is injected always, we'll add it later
+			if (commandInfo.injectAlways) continue;
 
-				// checking if a process is running is slow, so we cache the results
-				bool present = runningProcesses.TryGetValue (processName, out bool isRunning);
-				if (!present)
-				{
-					isRunning = CommandManager.isProcessRunning (processName);
-					runningProcesses.Add (processName, isRunning);
-				}
+			addEmbeddingIfNeeded (commandInfo);
+		}
 
-				// if the process is not running, we skip this command
-				if (!isRunning) continue;
-			}
-
-			embeddingText += commandInfo.llmText + "\n";
-			if (commandInfo.requiresDate) requiresDate = true;
-			addedEmbeddings++;
-			if (addedEmbeddings >= MaxEmbeddingsToAdd) break;
+		// inject all commands with the "injectAlways" flag
+		foreach (var commandInfo in commandManager.Where ( cmd => cmd.injectAlways ))
+		{
+			addEmbeddingIfNeeded (commandInfo);
 		}
 
 		if (requiresDate)
@@ -169,6 +157,33 @@ internal partial class Main
 
 		return embeddingText;
 
+		//=============================================================================
+		/// <summary></summary>
+		bool addEmbeddingIfNeeded (CommandInfo ci)
+		{
+			// check if the command requires a program running
+			if (!String.IsNullOrWhiteSpace (ci.isProcessRunning))
+			{
+				string processName = ci.isProcessRunning;
+
+				// checking if a process is running is slow, so we cache the results
+				bool present = runningProcesses.TryGetValue (processName, out bool isRunning);
+				if (!present)
+				{
+					isRunning = CommandManager.isProcessRunning (processName);
+					runningProcesses.Add (processName, isRunning);
+				}
+
+				// if the process is not running, we skip this command
+				if (!isRunning) return false;
+			}
+
+			embeddingText += ci.llmText + "\n";
+			if (ci.requiresDate) requiresDate = true;
+			addedEmbeddings++;
+			return true;
+
+		}
 	}
 
 
@@ -178,9 +193,11 @@ internal partial class Main
 	{
 		try
 		{
+			// calculate the prompt for the LLM
 			string llmExtraInstructions = await calculateCommandInfoInstructions (userOrder);
 			if (llmExtraInstructions == null) return;
 
+			// ask OpenAI for the answer
 			string jsonAnswer = await aiModule.giveOrder (userOrder,llmExtraInstructions);
 			if (jsonAnswer == null) return;
 
@@ -192,14 +209,17 @@ internal partial class Main
 			// trap OpenAI errors
 			if (jsonAnswer.StartsWith ("Error {")) throw new Exception ("OpenAI error");
 
-			// avoid problems with trailing text
+			// avoid problems with unwanted leading text
 			jsonAnswer = jsonAnswer.Substring (jsonAnswer.IndexOf ("{"));
 
-			// deserialize json into OpenAIJson (will fail if the json is not valid)
+			// same for the text at the end
+			jsonAnswer = jsonAnswer.Substring (0,jsonAnswer.LastIndexOf ("}")+1);
+
+			// deserialize json into LLMCommandList (will fail if the json is not valid)
 			LLMCommandList commands = JsonConvert.DeserializeObject<LLMCommandList> (jsonAnswer);
 
 
-			// execute the orders
+			// execute each order sequentially
 			foreach (var cmd in commands.commandList)
 			{
 				ConsoleEx.Warning (cmd.explanation);
@@ -221,7 +241,7 @@ internal partial class Main
 	{
 		Action action;
 
-		// Some functions must be run in the main thread. This run function only acts as a dispatcher.
+		// Some functions must be run in the main thread. This Run function only acts as a dispatcher.
 		while (true)
 		{
 			Task.Delay (100).Wait ();

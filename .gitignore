@@ -366,4 +366,5 @@ FodyWeavers.xsd
 .hg/
 .hgignore
 Settings/secrets.json
-
+embeddingDB/
+external/

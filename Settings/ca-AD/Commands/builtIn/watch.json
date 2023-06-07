@@ -9,15 +9,15 @@
 		// The regexps to match with quick run
 		"regExp": 
 		[
-			"Watch (?<mainParam>.*)",
-			"Search a video (of )?(?<mainParam>.*)",
-			"See a video (of )?(?<mainParam>.*)",
-			"Play a video (of )?(?<mainParam>.*)",
+			"(Posa|Visualitza) (un vídeo )?(de )?(?<mainParam>.*)",
+			
+			// (vull, que és descartat) veure
+			"Veure (un vídeo )?(de )?(?<mainParam>.*)",
 		],
 		
 		"invalidWords":
 		[
-			"photo","image","song","music",
+			"foto","imatge","imatges","cançó","cançons","música",
 		],
 		
 		// action and param translation of the regEx if it matches.

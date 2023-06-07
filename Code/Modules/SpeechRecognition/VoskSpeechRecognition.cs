@@ -33,17 +33,28 @@ public class VoskSpeechRecognition : ISpeechRecognitionModule
     /// <summary></summary>
     public VoskSpeechRecognition initialize()
     {
-        Console.WriteLine("Loading vosk model...");
+		Console.WriteLine ("Loading vosk model...");
         Vosk.Vosk.SetLogLevel(-1);
 
 		string speechRecognitionFile = Program.Settings.Vosk.ModelPath;
+		if (String.IsNullOrWhiteSpace (speechRecognitionFile)
+			|| !Directory.Exists (speechRecognitionFile) )
+		{
+			ConsoleEx.Error ("Vosk model not found. Please set the path to the model in the settings file.");
+			Environment.Exit (1);
+			return null;
+		}
 
-		// models
-		var model = new Model(speechRecognitionFile);
-        voskRecognizer = new VoskRecognizer(model, inputAudioModule.SampleRate);
 
-        // receive all audio input updates here
-        inputAudioModule.AudioInput += AudioInput_AudioInput;
+		// new VoskRecognizer just crashes if the model folder is empty (no exception, just crashes)
+		Console.WriteLine ("    note: if a crash happens now, the data in the vosk model folder is probably wrong or empty.");
+
+		// load model
+		Model model = new Model (speechRecognitionFile);
+		voskRecognizer = new VoskRecognizer (model, inputAudioModule.SampleRate);
+
+		// receive all audio input updates here
+		inputAudioModule.AudioInput += AudioInput_AudioInput;
 
         Console.WriteLine("Vosk model loaded.");
         return this;
@@ -56,10 +67,16 @@ public class VoskSpeechRecognition : ISpeechRecognitionModule
         processAudio(e);
     }
 
+	//=============================================================================
+	/// <summary></summary>
+	public void reset ()
+	{
+		voskRecognizer.Reset ();
+	}
 
     //=============================================================================
     /// <summary></summary>
-    void processAudio(AudioInputAvailableEventArgs e)
+    void processAudio (AudioInputAvailableEventArgs e)
     {
         string res, rv;
         bool finished = false;

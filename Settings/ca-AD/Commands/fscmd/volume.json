@@ -1,0 +1,14 @@
+[
+	// sample with no quick-command
+	{
+		// the name of the action. Must be unique.
+		"name":"volumeControl",
+
+		// descriptive text for the LLM
+		"llmText":"If the user wants to set an absolute value for the volume, use action='%FSCMD%' and param='volume --set=<volume from 0 to 100>.\nIf the user wants to set a relative volume, use action='%FSCMD' and param='volume --relativeSet=<relative volume, 50 is half, 200 is double>'."
+		
+
+		
+	},
+
+]

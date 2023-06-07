@@ -29,6 +29,7 @@ public class LanguageSettings
 public class GoogleSpeechSettings
 {
     public string Code { get; set; }
+	public double MaxRecognitionTime { get; set; }
 	public int VerboseLevel { get; set; }
 }
 
@@ -49,6 +50,11 @@ public class OpenAISettings
 	public string ApiKey { get; set; }
 }
 
+public class PromptSettings
+{
+	public int MaxEmbeddings { get; set; } = 10;
+}
+
 public class Config
 {
 	public int QuickCommandLevel { get; set; }
@@ -62,9 +68,10 @@ public class AssistantSettings
 
     public RecognitionSettings Recognition { get; set; }
 	public Config Config { get; set; }
+	public PromptSettings Prompt { get; set; }
 
-    // implementation settings
-    public GoogleSpeechSettings GoogleSpeech { get; set; }
+	// implementation settings
+	public GoogleSpeechSettings GoogleSpeech { get; set; }
     public VoskSettings Vosk { get; set; }
 	public OpenAISettings OpenAI { get; set; }
 

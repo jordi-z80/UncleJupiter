@@ -50,13 +50,15 @@ internal partial class CommandManager
 		// remove some words from the start of the command
 		command = prefilterCommand (command);
 
+		string[] tokenizedCommand = tokenizeString (command);
+
 		// check all commands to see if the command matches any RegEx
         foreach (var cmd in commands)
         {
-			if (cmd.flags.Contains (g.DisableQuickCommand)) continue;
+			if (cmd.flags.Contains (g.FlagDisableQuickCommand)) continue;
 
 			// Check if the command can be used as quick-command by looking at the valid and invalid words
-			if (commandHasInvalidWords (command, cmd)) continue;
+			if (commandHasInvalidWords (tokenizedCommand, cmd)) continue;
 
 			foreach (var regExp in cmd.regExp)
 			{
@@ -118,6 +120,10 @@ internal partial class CommandManager
 				launchUrl (mainParameter);
 				break;
 
+			case "unknown":
+				Console.WriteLine ("LLM failed to understand the command.");
+				break;
+
 			default:
 				Console.WriteLine ("Unknown command " + actionName);
 				return false;
@@ -127,29 +133,6 @@ internal partial class CommandManager
 
 	}
 
-	//=============================================================================
-	/// <summary>Find the next space not inside quotes</summary>
-	int findNextSpace (string text,int index=0)
-	{
-		bool insideQuotes=false;
-		while (index < text.Length)
-		{
-			if (text[index] == '"')
-			{
-				insideQuotes = !insideQuotes;
-				index++;
-				continue;
-			}
-
-			if (!insideQuotes)
-			{
-				if (text[index] == ' ') return index;
-			}
-
-			index++;
-		}
-		return -1;
-	}
 
 	//=============================================================================
 	/// <summary></summary>
@@ -187,5 +170,12 @@ internal partial class CommandManager
 	internal CommandInfo getCommandById (string id)
 	{
 		return commands.FirstOrDefault (x => x.name == id);
+	}
+
+	//=============================================================================
+	/// <summary></summary>
+	internal IEnumerable<CommandInfo> Where (Func<CommandInfo,bool> predicate)
+	{
+		return commands.Where (predicate);
 	}
 }

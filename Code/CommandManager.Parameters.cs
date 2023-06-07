@@ -22,27 +22,43 @@ internal partial class CommandManager
 	}
 
 
+	//=============================================================================
+	/// <summary></summary>
+	string[] tokenizeString (string command)
+	{
+		string[] words = command.Split (' ', ',', '.', '\t', '\r');
+
+		return words;
+	}
 
 	//=============================================================================
 	/// <summary></summary>
-	private bool commandHasInvalidWords (string command, CommandInfo cmd)
+	private bool commandHasInvalidWords (string[] tokenizedCommand, CommandInfo cmd)
 	{
 		// first check global invalid words that can be overriden in the command
+		// note: check is done word by word, otherwise "then" may match "authentic"
 		bool invalidWordFound = false;
 		foreach (var word in quickCommandDiscardWords)
 		{
-			if (!command.Contains (word, StringComparison.OrdinalIgnoreCase)) continue;
+			var found = tokenizedCommand.FirstOrDefault (p => p.Equals (word, StringComparison.OrdinalIgnoreCase));
+			if (found == null) continue;
 
 			var wordIsAllowed = cmd.allowedWords.Find ( w => w.Equals (word, StringComparison.OrdinalIgnoreCase));
-			if (wordIsAllowed == null) invalidWordFound = true;
+			if (wordIsAllowed == null)
+			{
+				invalidWordFound = true;
+				break;
+			}
 		}
 
 		if (invalidWordFound) return true;
 
 		// now for the invalid words of the command
 		foreach (var word in cmd.invalidWords)
-			if (command.Contains (word, StringComparison.OrdinalIgnoreCase))
-				return true;
+		{
+			var found = tokenizedCommand.FirstOrDefault (p => p.Equals (word, StringComparison.OrdinalIgnoreCase));
+			if (found != null) return true;
+		}
 
 		return false;
 	}
@@ -95,7 +111,7 @@ internal partial class CommandManager
 	}
 
 	//=============================================================================
-	/// <summary>Lame way to try to convert a text string into time. This is only for very common cases,
+	/// <summary>Lame way to try to convert a text string into time. This is only for very common cases using quick-commands,
 	/// this should be let to the LLM to fix the string.</summary>
 	string tryToTranslateToTime (string str)
 	{
