@@ -76,6 +76,10 @@ Finally,
 
 You can also install the dependencies manually, check the appSettings files to see where the files are expected to be.
 
+### What's installed
+* Vosk, an offline speech recognizer. ( https://alphacephei.com/vosk/models )
+* FSCmd, a small command-line tool created to help UncleJupiter ( https://github.com/jordi-z80/FSCmd )
+* 3 ST:TNG sounds, way cooler than my speccy beeps. ( https://www.trekcore.com/audio/ )
 
 # Settings
 
@@ -105,7 +109,7 @@ Commands can be executed as a quick-command. The concept here is that simple ord
 
 ## Command Structure
 
-The command format is quite straightforward. It's recommended to examine the commands in the project to understand:
+The command format is quite straightforward. It's easier to understand it by just editing the existing ones.
 
 The file must contain a JSON array of objects, where each object is a command. The command includes the following fields:
 
@@ -230,9 +234,10 @@ Once you hear the "beep," you can issue your order.
 * **I want to watch a StarTalk video podcast.**
 * **Play a song from Genesis that talks about houses.**
 
-Note: Saying "play a song" doesn't actually play a song right now. It maps the order into a YouTube search. I haven't found a way to directly play a song on YouTube. So, if you have a solution, you can easily modify the Commands/builtIn/watch.json file to play it directly.
+Note: Saying "play a song" doesn't actually play a song right now. It maps the order into a YouTube search. I haven't found a way to directly play a song on YouTube. So, if you have an alternative url, you can easily modify the Commands/builtIn/watch.json file to play it directly (or just replace it with Spotify or similar).
 
 * **When was the Sinclair Spectrum released?**
+
 Note: Questions are converted into searches (change prompt.txt to modify this behavior).
 
 Some commands (search, listen, watch) use "specify if possible" in their embedding. This implies that if the LLM is intelligent enough (GPT-3.5 seems to do it very rarely, but based on my tests, I suspect GPT-4 is much better at this), it might work as expected.
