@@ -25,7 +25,7 @@ Currently, it can be configured to use any language supported by Vosk and Google
 
 # Warning 
 
-This program, as is, utilizes **paid services*. It's crucial to closely monitor your OpenAI API and Google Speech expenditures.
+This program, as is, utilizes **paid services**. It's crucial to closely monitor your OpenAI API and Google Speech expenditures.
 
 The assistant **doesn't check** for any kind of **security**. The main prompt instructs the LLM to reject any command that could harm the computer, but as you probably know, there are numerous ways to damage a computer that the LLM might not detect or might simply ignore.
 
