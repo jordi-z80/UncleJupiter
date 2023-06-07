@@ -30,7 +30,7 @@ if "%ans%" NEQ "n" (
 )
 
 set ans=y
-set /p ans=Do you want to install FSCmd (Y/n)?
+set /p ans=Do you want to install FSCmd (https://github.com/jordi-z80/FSCmd)  (Y/n)?
 if "%ans%" NEQ "n" (
     git clone https://github.com/jordi-z80/FSCmd ./external/FSCmd
     cd ./external/FSCmd
@@ -41,7 +41,7 @@ if "%ans%" NEQ "n" (
 )
 
 set ans=y
-set /p ans=Do you want to install external sounds (Y/n)?
+set /p ans=Do you want to install 3 external sounds (Y/n)?
 if "%ans%" NEQ "n" (
     md external\audio
     curl -o external/audio/computerbeep_29.mp3 https://www.trekcore.com/audio/computer/computerbeep_29.mp3

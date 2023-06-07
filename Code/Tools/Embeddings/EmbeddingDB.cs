@@ -31,7 +31,8 @@ internal class EmbeddingDB
 		}
 		catch (Exception e)
 		{
-			ConsoleEx.Error (e.Message);
+			ConsoleEx.Warning (e.Message);
+			ConsoleEx.Warning ("This may be OK if this is the first time you run the program.");
 		}
 	}
 

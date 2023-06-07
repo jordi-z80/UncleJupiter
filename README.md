@@ -55,8 +55,10 @@ The design of the program is modular, so it should be easy to replace any of the
 
 * Install .NET Core 7.0	https://dotnet.microsoft.com/en-us/download
 * Clone the repository `git clone https://github.com/jordi-z80/UncleJupiter`
-* Run `dotnet build` in the root folder
-* Run `dotnet run` in the root folder
+* Enter the folder `cd UncleJupiter`
+* Run `dotnet build`
+* Run `installDependencies.bat` (optional, but strongly recommended, read below.)
+* Run `dotnet run`
 
 ## Installing extra files
 
