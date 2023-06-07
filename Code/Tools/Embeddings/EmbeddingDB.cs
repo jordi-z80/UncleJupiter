@@ -82,6 +82,7 @@ internal class EmbeddingDB
 		Console.WriteLine ($"Calculating embedding for '{cmd.name}'.");
 
 		List<double> embeddingData = await ai.createEmbedding (cmd.llmText);
+		if (embeddingData == null) return;
 
 		EmbeddingItem embedding = new EmbeddingItem()
 		{

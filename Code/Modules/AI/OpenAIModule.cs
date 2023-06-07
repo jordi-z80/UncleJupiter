@@ -17,8 +17,6 @@ internal class OpenAIModule : IAIModule
 
     OpenAIService api;
 
-	bool warningDisplayed = false;
-
 	//=============================================================================
 	/// <summary></summary>
 	public OpenAIModule ()
@@ -30,6 +28,12 @@ internal class OpenAIModule : IAIModule
     /// <summary></summary>
     void initialize()
     {
+		if (String.IsNullOrWhiteSpace (Program.Settings.OpenAI?.ApiKey))
+		{
+			ConsoleEx.Error ("OpenAI ApiKey not found");
+			Environment.Exit (1);
+			return;
+		}
         api = new OpenAIService(new OpenAiOptions()
         {
             ApiKey = Program.Settings.OpenAI.ApiKey
@@ -76,9 +80,8 @@ internal class OpenAIModule : IAIModule
         {
 			ConsoleEx.Error (completionResult.Error.ToString());
 
-			if (completionResult.Error.Code == "invalid_api_key" && !warningDisplayed)
+			if (completionResult.Error.Code == "invalid_api_key")
 			{
-				warningDisplayed = true;
 				ConsoleEx.Warning ("OpenAI api key inside secrets.json is probably wrong. GPT won't work.");
 			}
 
@@ -121,9 +124,8 @@ internal class OpenAIModule : IAIModule
 		{
 			ConsoleEx.Error (results.Error.ToString());
 
-			if (results.Error.Code == "invalid_api_key" && !warningDisplayed)
+			if (results.Error.Code == "invalid_api_key")
 			{
-				warningDisplayed = true;
 				ConsoleEx.Warning ("OpenAI api key inside secrets.json is probably wrong. GPT won't work.");
 			}
 
