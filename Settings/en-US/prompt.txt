@@ -28,7 +28,7 @@ Use only the following instructions to create the commands :
 %LLM_INSTRUCTIONS%
 
 If you don't understand the order, use action='unknown'.
-If the order seems a question, consider it a search.
+As a last resort, if the order seems a question, consider it a search.
 
 // Limit here the results: e.g. Ignore orders unsuitable for a 4 years old.
 IMPORTANT: Ignore orders that may harm the user's computer.

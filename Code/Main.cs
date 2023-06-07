@@ -51,7 +51,7 @@ internal partial class Main
 		voskRecognition.SpeechRecognitionResult += VoskRecognition_SpeechRecognitionResult;
 		googleSpeech.SpeechRecognitionResult += GoogleSpeech_SpeechRecognitionResult;
 
-		ConsoleEx.Warning ("Ready for commands.");
+		ConsoleEx.Warning ($"Ready for commands. Language is {Program.Settings.Language.Name}.");
 
 	}
 

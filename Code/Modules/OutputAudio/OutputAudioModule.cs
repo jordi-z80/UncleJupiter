@@ -11,7 +11,7 @@ namespace UncleJupiter;
 internal class OutputAudioModule : IOutputAudioModule
 {
     WaveStream computerCue, computerFinished, computerAccept;
-	WaveStream default1, default2;
+	WaveStream default1, default2, default3;
 
     //=============================================================================
     /// <summary></summary>
@@ -26,6 +26,7 @@ internal class OutputAudioModule : IOutputAudioModule
     {
 		default1 = loadAudio ("Content/audio/default1.mp3");
 		default2 = loadAudio ("Content/audio/default2.mp3");
+		default3 = loadAudio ("Content/audio/default3.mp3");
 
 		computerCue = loadAudio (Program.Settings.OutputAudio.ComputerCue);
         computerAccept = loadAudio (Program.Settings.OutputAudio.ComputerAccept);
@@ -53,7 +54,7 @@ internal class OutputAudioModule : IOutputAudioModule
         switch (type)
         {
             case "computerCue": snd = computerCue; if (snd == null) snd = default1; break;
-            case "computerAccept": snd = computerAccept; if (snd == null) snd = default1; break;
+            case "computerAccept": snd = computerAccept; if (snd == null) snd = default3; break;
             case "computerFinished": snd = computerFinished; if (snd == null) snd = default2; break;
             default: return;
         }
