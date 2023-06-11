@@ -89,6 +89,8 @@ The Settings folder contains the following files:
 * **macros.json**: Values for macro expansion for actions defined by the commands. Basically, these are all the programs and URLs you want to use.
 * **secret.json**: A place for your secret keys. You need to create it yourself by renaming **secret.json.example** and filling it out.
 
+Note: Edit appSettings.json to change the default OpenAI model (gpt-3.5-turbo) to GPT-4.
+
 # Settings per Language
 
 For each language, there's a folder that contains the language-specific configuration:
